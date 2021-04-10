@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="miaosha_commons" />
+        <module name="miaosha_goods" />
+        <module name="miaosha_shop" />
+        <module name="miaosha_eureka" />
+        <module name="miaosha_order" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="miaosha_commons" target="1.8" />
+      <module name="miaosha_eureka" target="1.8" />
+      <module name="miaosha_goods" target="1.8" />
+      <module name="miaosha_order" target="1.8" />
+      <module name="miaosha_shop" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="miaosha_eureka" options="-parameters" />
+      <module name="miaosha_goods" options="-parameters" />
+      <module name="miaosha_order" options="-parameters" />
+      <module name="miaosha_shop" options="-parameters" />
+    </option>
+  </component>
+</project>

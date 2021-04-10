@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto、Jacob Thornton 以及众多 Bootstrap 贡献者">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>ERROR</title>
+
+    <link rel="canonical" href="https://v4.bootcss.com/docs/examples/sign-in/">
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.css}" rel="stylesheet" />
+
+    <!-- Favicons -->
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.js}"></script>
+</head>
+<body class="text-center">
+    错误信息：<span th:text="${result.getMsg()}"></span>
+</body>
+</html>

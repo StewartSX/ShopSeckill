@@ -1,0 +1,92 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto、Jacob Thornton 以及众多 Bootstrap 贡献者">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>TITLE</title>
+
+    <link rel="canonical" href="https://v4.bootcss.com/docs/examples/sign-in/">
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.css}" rel="stylesheet" />
+
+    <!-- Favicons -->
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.js}"></script>
+    <script th:src="@{/js/md5.js}"></script>
+
+    <script>
+        $(function () {
+            $("#btn_login").click(doLogin);
+        });
+
+        // 登录功能
+        function doLogin() {
+            // 1.获得用户名和密码
+            var inputPass = $("#inputPassword").val();
+            var salt = "mjuflapywnduiwhh";
+            // 2.对密码进行MD5加密
+            var str = salt.charAt(4) + salt.charAt(8) + inputPass + salt.charAt(1) + salt.charAt(6);
+            var pass = md5(str);
+            // 3.发送AJAX请求
+            $.post(
+                "login",
+                {
+                    tel: $("#inputTel").val(),
+                    password: pass
+                },
+                function(result){
+                    if (result.code == 0) {
+                        location.href = "list";
+                    } else {
+                        alert(result.msg);
+                    }
+                }, "json"
+            );
+        }
+    </script>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+
+<form class="form-signin" style="width: 40%; margin: 0 auto" method="post" action="/login">
+    <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+    <label for="inputTel" class="sr-only">手机号</label>
+    <input type="tel" id="inputTel" name="tel" class="form-control" placeholder="手机号" required autofocus>
+    <label for="inputPassword" class="sr-only">密 码</label>
+    <input type="password" id="inputPassword" name="password" class="form-control" placeholder="密码" required>
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me"> 记住我
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="button" id="btn_login">登录</button>
+    <p class="mt-5 mb-3 text-muted">&copy; 2017-2021</p>
+</form>
+</body>
+</html>

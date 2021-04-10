@@ -1,0 +1,128 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto、Jacob Thornton 以及众多 Bootstrap 贡献者">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>miaoshaGoodsDetail</title>
+
+    <link rel="canonical" href="https://v4.bootcss.com/docs/examples/sign-in/">
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/webjars/bootstrap/4.5.0/css/bootstrap.css}" rel="stylesheet" />
+
+    <!-- Favicons -->
+    <script th:src="@{/webjars/jquery/3.5.1/jquery.js}"></script>
+    <script th:src="@{/webjars/bootstrap/4.5.0/js/bootstrap.js}"></script>
+
+    <script>
+        $(function () {
+            $("#btn_submit").click(function () {
+                miaosha();
+            });
+        });
+
+        function miaosha() {
+            var goodsId = $("#miaoshaGoodsId").val();
+            //获得请求地址
+            $.post("/getMiaoshaPath", {miaoshaGoodsId: goodsId}, function (data) {
+                if (data == "nologin"){
+                    alert("用户未登录");
+                } else {
+                    //发送ajax请求
+                    $.post("/" + data + "/do_miaosha", $("#miaoshaForm").serialize(), function (data1) {
+                        if (data1.code == 0){
+                            //轮询函数
+                            getOrderStatus($("#miaoshaGoodsId").val(), 1);
+                        } else {
+                            alert(data1.msg)
+                        }
+                    }, "json");
+                }
+            })
+        }
+
+        // 轮询函数
+        function getOrderStatus(goodsId, num) {
+            $.post("/getOrderStatus", {miaoshaGoodsId: goodsId}, function (data) {
+                if (data.code == 0){
+                    //秒杀成功
+                    $("#message").html("秒杀成功！" + data.msg);
+                    alert("是否跳到订单页？");
+                } else if (data.code == 500701){
+                    //排队中
+                    $("#message").html("排队中......" + num + "秒");
+                    //每过1s刷新一次
+                    setTimeout(function () {
+                        getOrderStatus(goodsId, num + 1);
+                    }, 1000);
+                } else {
+                    //秒杀失败
+                    $("#message").html("秒杀失败：" + data.msg);
+                    //3s后信息清空
+                    setTimeout(function () {
+                        $("#message").html("");
+                    }, 5000);
+                }
+            }, "json");
+        }
+
+
+    </script>
+</head>
+<body class="">
+
+    <div class="container">
+        <h2>商品详情页</h2>
+        <table class="table thread-default table-hover">
+            <form th:action="@{/do_miaosha}" method="post" id="miaoshaForm">
+                <input id="miaoshaGoodsId" name="miaoshaGoodsId" th:value="${goods.getMiaoshaGoodsId()}" type="hidden">
+                <input name="goodsId" th:value="${goods.getGoodsId()}" type="hidden">
+                <input name="goodsName" th:value="${goods.getGoodsName()}" type="hidden">
+                <input name="goodsPrice" th:value="${goods.getGoodsPrice()}" type="hidden">
+                <input name="status" value="0" type="hidden">
+                <input name="orderChannel" value="1" type="hidden">
+            </form>
+            <tbody>
+                <tr class="active" >
+                    <td>商品名称</td>
+                    <td th:text="${goods.getGoodsName()}"></td>
+                </tr>
+                <tr class="active" >
+                    <td>商品信息</td>
+                    <td th:text="${goods.getGoodsTitle()}"></td>
+                </tr>
+                <tr class="active" >
+                    <td>商品图片</td>
+                    <td><img th:src="${goods.getGoodsImg()}" width="100" height="100" /></td>
+                </tr>
+                <tr class="active" >
+                    <td>秒杀开始时间</td>
+                    <td th:if="${status==2}">秒杀已结束</td>
+                    <td th:if="${status==0}">秒杀未开始，<span th:text="${reMain}"></span><span>秒后开始秒杀</span></td>
+                    <td th:if="${status==1}"><span th:text="${#dates.format(goods.getStartDate(),'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <button id="btn_submit" class="btn btn-info" type="button" form="miaoshaForm">立即秒杀</button>
+                        <div class="container">
+                            <span id="message" class="font-weight-bold"></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="active" >
+                    <td>原价</td>
+                    <td th:text="${#numbers.formatDecimal(goods.getGoodsPrice()/100.0,1,2)}"></td>
+                </tr>
+                <tr class="active" >
+                    <td>秒杀价格</td>
+                    <td th:text="${#numbers.formatDecimal(goods.getMiaoshaPrice()/100.0,1,2)}"></td>
+                </tr>
+                <tr class="active" >
+                    <td>剩余数量</td>
+                    <td th:text="${goods.getStockCount()}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

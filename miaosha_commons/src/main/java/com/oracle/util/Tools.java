@@ -21,6 +21,10 @@ public class Tools {
         return str.replace("-", "");
     }
 
+    public static String uuid1(){
+        return null;
+    }
+
     /**
      * 随机生成一个表达式
      * @return 表达式

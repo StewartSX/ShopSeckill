@@ -18,6 +18,7 @@ public class MQSender {
      */
     public void sendMessage(MiaoshaOrder order){
         System.out.println("发送order到消息队列：" + order);
+        //发送给miaosha.direct，路由件为miaosha，发送的内容为订单信息
         amqpTemplate.convertAndSend("miaosha.direct", "miaosha", order);
     }
 }
